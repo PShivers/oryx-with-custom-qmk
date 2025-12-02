@@ -222,21 +222,21 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
 
     // ----------------------------------------------------
-    // Logic to stop W when ANY other key is pressed
+    // END: Custom KC_ONESHOT_W Logic
     // ----------------------------------------------------
-    // If W is currently held AND any key is pressed, it releases W
-    if (w_is_held && record->event.pressed) {
-        // Only trigger if the key pressed is *not* one of the thumb keys (MO(3), MO(4), etc.)
-        // or a key that you want to ignore. For simplicity, we just check if it's not the KC_ONESHOT_W itself.
-        // The check at the top covers KC_ONESHOT_W. This check handles everything else.
-        if (keycode != KC_ONESHOT_W) {
+    
+    // ----------------------------------------------------
+    // START: Stop W-hold when S or W is pressed
+    // ----------------------------------------------------
+    if (w_is_held && (keycode == KC_W || keycode == KC_S)) {
+        if (record->event.pressed) {
+            // Release the held W key and clear the flag
             unregister_code(KC_W);
             w_is_held = false;
-            // The newly pressed key will be processed normally by returning true.
         }
     }
     // ----------------------------------------------------
-    // END: Custom KC_ONESHOT_W Logic
+    // END: Stop W-hold when S or W is pressed
     // ----------------------------------------------------
     
     // ----------------------------------------------------
